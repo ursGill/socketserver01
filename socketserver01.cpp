@@ -1,10 +1,12 @@
 #include <iostream>
 #include <winsock.h>
+#include<thread>
 #include <string>
 using namespace std;
 
 #define PORT 9909
 #define MAX_CLIENTS 5
+#define BROADCAST_PORT 9910
 
 struct sockaddr_in srv;
 fd_set fr, fw, fe;
@@ -14,11 +16,42 @@ int nArrClient[MAX_CLIENTS] = { 0 };
 string clientNames[MAX_CLIENTS];
 
 // Function declarations
+void BroadcastServerIP();
 void BroadcastMessage(string senderId, const string& msg);
 void SendPrivateMessage(string senderId, string receiverId, const string& msg);
 void RemoveClient(int nClientSocket);
 int checkclient(string id);
 
+
+// function for Broadcasting server IP
+void BroadcastServerIP() {
+    // This function is for broadcast server IP 
+    int udpSocket = socket(AF_INET, SOCK_DGRAM, 0);
+    if (udpSocket < 0) return;
+
+        BOOL broadcastEnable = TRUE;
+        setsockopt(udpSocket, SOL_SOCKET, SO_BROADCAST, (char*)&broadcastEnable , sizeof(broadcastEnable));
+
+        sockaddr_in broadcastAddr;
+        broadcastAddr.sin_family = AF_INET;
+        broadcastAddr.sin_port = htons(9910); // UPD broadcast port
+        broadcastAddr.sin_addr.s_addr = INADDR_BROADCAST;
+
+        char hostname[256];
+        gethostname(hostname, sizeof(hostname));
+        struct hostent* host = gethostbyname(hostname);
+        string serverIP = inet_ntoa(*(struct in_addr*)host->h_addr);
+        string msg = "SERVER_IP:" + serverIP;
+
+        cout << "\n[Auto-Broadcast] Server IP is " << serverIP;
+
+        while (true) {
+            sendto(udpSocket, msg.c_str(), msg.size(), 0, (sockaddr*)&broadcastAddr, sizeof(broadcastAddr));  
+            Sleep(5000); // send every 5 seconds
+        }
+
+
+}
 void ProcessNewMessages(int nClientSocket, string clientId) {
     char buff[512] = { 0 };
 
@@ -166,6 +199,7 @@ int checkclient(string id) {
 
 int main() {
     WSADATA ws;
+    cout << "Sever : " << endl;
     if (WSAStartup(MAKEWORD(2, 2), &ws) < 0) {
         cout << "\nWSA initialization failed.";
         return -1;
@@ -201,6 +235,12 @@ int main() {
         return -1;
     }
     cout << "\nServer listening on port " << PORT;
+
+    // Start broadcasting IP in the background
+    thread broadcaster(BroadcastServerIP);
+    broadcaster.detach();
+
+    // Main chat loop
 
     nMaxFd = nSocket;
     struct timeval tv;
