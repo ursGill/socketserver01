@@ -1,0 +1,16 @@
+[Thu Oct 23 21:53:46 2025] Server started on port 9909
+[Thu Oct 23 21:54:00 2025] Client connected: gopi
+[Thu Oct 23 21:54:00 2025] Broadcast from Server: gopi has joined the chat
+[Thu Oct 23 21:54:22 2025] Client connected: ansh
+[Thu Oct 23 21:54:22 2025] Broadcast from Server: ansh has joined the chat
+[Thu Oct 23 21:55:56 2025] ansh sent: hello gopi
+[Thu Oct 23 21:55:56 2025] Broadcast from ansh: hello gopi
+[Thu Oct 23 21:56:02 2025] ansh sent: kiva wa
+[Thu Oct 23 21:56:03 2025] Broadcast from ansh: kiva wa
+[Thu Oct 23 21:56:08 2025] ansh sent: hor suna
+[Thu Oct 23 21:56:08 2025] Broadcast from ansh: hor suna
+[Thu Oct 23 21:56:27 2025] gopi sent: vd pra
+[Thu Oct 23 21:56:27 2025] Broadcast from gopi: vd pra
+[Thu Oct 23 21:56:51 2025] gopi sent: tuhi sunavo kiva haga ja
+[Thu Oct 23 21:56:51 2025] Broadcast from gopi: tuhi sunavo kiva haga ja
+[Thu Oct 23 22:06:14 2025] Server stopped by admin.
